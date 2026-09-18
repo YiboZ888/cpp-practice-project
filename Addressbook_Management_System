@@ -1,0 +1,338 @@
+#include <iostream>
+using namespace std;
+#include <string>
+#define MAX 1000
+
+//Design contact struct
+struct Person
+{
+    //name
+    string m_Name;
+    //gender
+    int m_Gender;
+    //age
+    int m_Age;
+    //phone number
+    string m_Num;
+    //home address
+    string m_Addr;
+};
+
+//Design Address book struct
+struct Addressbooks
+{
+    //An array of contacts saved in the address book
+    struct Person personArray[MAX];
+    
+    //The current num of contacts recorded inthe address book
+    int m_Size;
+};
+
+
+//1. Add a contact
+void addPerson(Addressbooks * abs)
+{
+    //Determine if the addressbook full or not; if it is customer cannot add contacts anymore
+    if (abs->m_Size == MAX)
+    {
+        cout << "Address book is full, cannot add contacts anymore!" << endl;
+        return;
+    }
+    else
+    {
+        //Add detailed contacts
+        
+        //name
+        string name;
+        cout << "Please enter the name: " << endl;
+        cin >> name;
+        abs->personArray[abs->m_Size].m_Name = name;
+        
+        //gender
+        cout << "Please enter the gender: " << endl;
+        cout << "1 --- Male" << endl;
+        cout << "2 --- Female" << endl;
+        int gender = 0;
+        
+        while (true)
+        {
+            //If entered 1 or 2 can exit the loop, because entering a true value
+            //If entering is wrong, reenter
+            cin >> gender;
+            if(gender == 1 || gender == 2)
+            {
+                abs->personArray[abs->m_Size].m_Gender = gender;
+                break;
+            }
+            cout << "Entering is wrong, please try again" << endl;
+        }
+        
+       
+        //age
+        cout << "Please enter the age: " << endl;
+        int age;
+        cin >> age;
+        abs->personArray[abs->m_Size].m_Age = age;
+        
+        //phonenumber
+        cout << "Please enter the phone number: " << endl;
+        string num;
+        cin >> num;
+        abs->personArray[abs->m_Size].m_Num = num;
+        
+        //address
+        cout << "Please enter the home address: " << endl;
+        string addr;
+        cin >> addr;
+        abs->personArray[abs->m_Size].m_Addr = addr;
+        
+        //Update the person num in address book
+        abs->m_Size++;
+        
+        cout << "Addition successful" << endl;
+    }
+}
+
+
+//2. Display all the contacts
+void showPerson(Addressbooks * abs)
+{
+    //Check if the number of contacts in the address book is 0; if so, display a message indicating that the record is empty.
+    //If not, display the info of the contacts that have been recorded
+    if(abs->m_Size == 0)
+    {
+        cout << "The current record is empty" << endl;
+    }
+    else
+    {
+        for(int i = 0; i < abs->m_Size; i++)
+        {
+            cout << "Name: " << abs->personArray[i].m_Name << "\t";
+            cout << "Gender: " << ( abs->personArray[i].m_Gender == 1 ? "Male":"Female" ) << "\t";
+            cout << "Age: " << abs->personArray[i].m_Age << endl;
+            cout << "Phone Number: " << abs->personArray[i].m_Num << "\t";
+            cout << "Home Address: " << abs->personArray[i].m_Addr << endl;
+            
+        }
+    }
+}
+
+
+//Check if the contact exists; if it does, return its specific position within the array; otherwise, return -1
+//Parameter 1: Address Book     Parameter 2: Compare names
+int isExist(Addressbooks * abs, string name)
+{
+    for(int i = 0; i < abs->m_Size; i++)
+    {
+        //Find the name entered by the customer
+        if(abs->personArray[i].m_Name == name)
+        {
+            return i; //Found it; return the index of this person in the array
+        }
+    }
+    return -1; //If the it is not found after the traversal completes, return -1
+}
+
+
+//3. Delete the specified contact
+void deletePerson(Addressbooks * abs)
+{
+    cout << "Please enter the contact you want to delete: " << endl;
+    
+    string name;
+    cin >> name;
+    
+    //ret == -1 not found
+    //ret != -1 found
+    int ret = isExist(abs, name);
+    
+    if (ret != -1)
+    {
+        //The person is found, proceed with the deletion
+        for(int i = ret; i < abs->m_Size; i++)
+        {
+            //Data move forward
+            abs->personArray[i] = abs->personArray[i+1];
+        }
+        abs->m_Size--; //Update the number of people in the address book
+        cout << "Deletion successful" << endl;
+    }
+    else
+    {
+        cout << "No such person found" << endl;
+    }
+}
+
+
+//4. Find the info of the specific contact
+void findPerson(Addressbooks * abs)
+{
+    cout << "Please enter the contact you want to find:  " << endl;
+    string name;
+    cin >> name;
+    
+    //Check if the specific contact in the address book or not
+    int ret = isExist(abs, name);
+    
+    if (ret != -1) //Contact found
+    {
+        cout << "Name: " << abs->personArray[ret].m_Name << "\t";
+        cout << "Gender: " << abs->personArray[ret].m_Gender << "\t";
+        cout << "Age: " << abs->personArray[ret].m_Age << "\t";
+        cout << "Phone Number: " << abs->personArray[ret].m_Num << "\t";
+        cout << "Home Address: " << abs->personArray[ret].m_Addr << endl;
+    }
+    else //Not found
+    {
+        cout << "No such person found" << endl;
+    }
+}
+
+
+//Modify the info of the specific contact
+void modifyPerson(Addressbooks * abs)
+{
+    cout << "Please enter the contact you want to modify: " << endl;
+    string name;
+    cin >> name;
+    
+    int ret = isExist(abs, name);
+    
+    if (ret != -1)
+    {
+        //name
+        string name;
+        cout << "Please enter the name: " << endl;
+        cin >> name;
+        abs->personArray[ret].m_Name = name;
+        
+        //gender
+        cout << "Please enter the gender: " << endl;
+        cout << "1 --- Male" << endl;
+        cout << "2 --- Female" << endl;
+        int gender = 0;
+        
+        while (true)
+        {
+            cin >> gender;
+            if(gender == 1 || gender == 2)
+            {
+                //Entering is correct, exit the loop
+                abs->personArray[ret].m_Gender = gender;
+                break;
+            }
+            cout << "Entering is wrong, please try again" << endl;
+        }
+        
+        //age
+        cout << "Please enter the age: " << endl;
+        int age = 0;
+        cin >> age;
+        abs->personArray[ret].m_Age = age;
+        
+        //phone num
+        cout << "Please enter the contact number: " << endl;
+        string num;
+        cin >> num;
+        abs->personArray[ret].m_Num = num;
+        
+        //home addr
+        cout << "Please enter the home address: " << endl;
+        string addr;
+        cin >> addr;
+        abs->personArray[ret].m_Addr = addr;
+        
+        cout << "Modification successful" << endl;
+    }
+    else //not found
+    {
+        cout << "No such person found" << endl;
+    }
+}
+
+
+//6. Clean all the contacts
+void cleanPerson(Addressbooks * abs)
+{
+    abs->m_Size = 0; //Set the current number of contact records to 0 to perform a logical clear
+    cout << "The contact list has been cleaned" << endl;
+}
+
+
+//Menu interface
+void showMenu()
+{
+    cout << "****************************" << endl;
+    cout << "***** 1. Add a contact *****" << endl;
+    cout << "***** 2. Display contacts **" << endl;
+    cout << "***** 3. Delect a contact **" << endl;
+    cout << "***** 4. Search a contact **" << endl;
+    cout << "***** 5. Modify a contact **" << endl;
+    cout << "***** 6. Clear contacts ****" << endl;
+    cout << "***** 0. Exit address book *" << endl;
+    cout << "****************************" << endl;
+}
+
+int main()
+{
+    
+    //Create a variable for the address book struct
+    Addressbooks abs;
+    //Initialize the current num of contacts in the address book
+    abs.m_Size = 0;
+    
+    int select = 0; //Create variables that are selected by the user for input
+    
+    while (true)
+    {
+        //Menu invocation
+        showMenu();
+        
+        cout << "Select your choice: " << endl;
+        cin >> select;
+        
+        switch (select)
+        {
+            case 1: // 1. Add a contact
+                addPerson(&abs); //Passing by address allows for the modification of actual arguments
+                break;
+            case 2: // 2. Display contacts
+                showPerson(&abs);
+                break;
+            case 3: // 3. Delect a contact
+            //{
+            //    cout << "Please enter the name of the contact to be deleted: "  << endl;
+            //    string name;
+            //    cin >> name;
+            //
+            //    if (isExist(&abs, name) == -1)
+            //    {
+            //        cout << "Nobody was found" << endl;
+            //    }
+            //    else
+            //    {
+            //        cout << "Found this person" << endl;
+            //    }
+            //}
+                deletePerson(&abs);
+                break;
+            case 4: // 4. Search a contact
+                findPerson(&abs);
+                break;
+            case 5: // 5. Modify a contact
+                modifyPerson(&abs);
+                break;
+            case 6: // 6. Clear contacts
+                cleanPerson(&abs);
+                break;
+            case 0: // 0. Exit address book
+                cout << "Welcome to use it next time" << endl;
+                return 0;
+                break;
+            default:
+                break;
+        }
+    }
+    
+    return 0;
+}
