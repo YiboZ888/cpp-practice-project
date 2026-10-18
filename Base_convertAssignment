@@ -1,0 +1,97 @@
+#include <iostream>
+using namespace std;
+
+// Count how many digits are needed
+int countDigits(int n, int b)
+{
+    if (n == 0)
+    {
+        return 1; // 0 means actual "0"
+    }
+
+    int count = 0;
+    while (n > 0)
+    {
+        n = n / b; // Remove the last digit
+        count++;   // Each division increases the number of digits by 1.
+    }
+    return count;
+}
+
+// Allocate memory for the array and convert the number to the specified base
+void covertToBase(int n, int b, int *digits, int digitCount)
+{
+    if (n == 0) // 0 means actual "0";
+    {
+        *digits = 0;
+        return;
+    }
+
+    int index = digitCount - 1; // Fill the array from the last index
+    while (n > 0)
+    {
+        *(digits + index) = n % b; // Remainder is this digit(0 - b-1)
+        index--;                   // Move to the previous position
+        n = n / b;                 // Remove the last digit
+    }
+    // When the loop is done, all digits are filled; index should be -1, but n = 0 at this point
+}
+
+// Print the results
+void printResult(int n, int b, int *digits, int digitCount)
+{
+    cout << "Integer: " << n << endl;
+    cout << "Base: " << b << endl;
+    cout << "Base-" << b << " representation: ";
+
+    int *p = digits; // Pointer points the first element of the array
+    for (int i = 0; i < digitCount; i++)
+    {
+        cout << *p; // Print the current element that p points to
+        p++;        // Move the pointer to the next element
+    }
+    cout << endl;
+}
+
+int main()
+{
+    int n; // Decimal integer
+    int b; // Base(2-10)
+
+    cout << "Enter a non-negative integer: ";
+    cin >> n;
+    cout << "Enter a base (2-10): ";
+    cin >> b;
+
+    if (n < 0)
+    {
+        cout << "Invalid integer!" << endl;
+        return 1; // Return a non 0 in case of error
+    }
+
+    if (b < 2 || b > 10)
+    {
+        cout << "Invalid base!" << endl;
+        return 1; // Return a non 0 in case of error
+    }
+
+    int digitCount = countDigits(n, b); // Decided the array size
+
+    int *digits = new int[digitCount]; // Allocate memory for the array
+
+    covertToBase(n, b, digits, digitCount); // Convert the number to the specified base
+
+    // Test: Array content
+    // cout << "Array content: ";
+    // for (int i = 0; i < digitCount; i++)
+    //{
+    //    cout << *(digits + i);
+    //}
+    // cout << endl;
+
+    printResult(n, b, digits, digitCount); // Access the print function
+
+    delete[] digits; // Free memory for the array
+
+    return 0;
+}
