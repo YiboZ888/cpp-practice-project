@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+
+class Complex
+{
+private:
+    double real;
+    double imag;
+
+public:
+    Complex(double r = 0.0, double i = 0.0) : real(r), imag(i) {}
+    Complex operator+(const Complex &other) const;
+    Complex operator-(const Complex &other) const;
+    Complex operator*(const Complex &other) const;
+    Complex operator/(const Complex &other) const;
+    Complex conjugate() const;
+
+    void display() const;
+};
+
+Complex Complex::operator+(const Complex &other) const
+{
+    return Complex(real + other.real, imag + other.imag);
+}
+
+Complex Complex::operator-(const Complex &other) const
+{
+    return Complex(real - other.real, imag - other.imag);
+}
+
+Complex Complex::operator*(const Complex &other) const
+{
+    return Complex(real * other.real - imag * other.imag, real * other.imag + imag * other.real);
+}
+
+Complex Complex::operator/(const Complex &other) const
+{
+    double denominator = other.real * other.real + other.imag * other.imag;
+    return Complex((real * other.real + imag * other.imag) / denominator,
+                   (imag * other.real - real * other.imag) / denominator);
+}
+
+Complex Complex::conjugate() const
+{
+    return Complex(real, -imag);
+}
+
+void Complex::display() const
+{
+    cout << real;
+    if (imag >= 0)
+        cout << " + " << imag << "i" << endl;
+    else
+        cout << " - " << -imag << "i" << endl;
+    cout << endl;
+}
+
+int main()
+{
+    Complex c1(3.0, 4.0);
+    Complex c2(1.0, 2.0);
+
+    Complex sum = c1 + c2;
+    Complex difference = c1 - c2;
+    Complex product = c1 * c2;
+    Complex quotient = c1 / c2;
+    Complex conjugateC1 = c1.conjugate();
+
+    cout << "c1: ";
+    c1.display();
+    cout << "c2: ";
+    c2.display();
+    cout << "Sum: ";
+    sum.display();
+    cout << "Difference: ";
+    difference.display();
+    cout << "Product: ";
+    product.display();
+    cout << "Quotient: ";
+    quotient.display();
+    cout << "Conjugate of c1: ";
+    conjugateC1.display();
+
+    return 0;
+}
