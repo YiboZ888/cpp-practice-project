@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Flower
+{
+private:
+    string name;
+    int petals;
+    float price;
+
+public:
+    Flower(string n, int p, float pr); // Constructor that takes the name, number of petals, and price of the flower
+    void display();
+};
+
+Flower::Flower(string n, int p, float pr)
+{
+    name = n;
+    petals = p;
+    price = pr;
+}
+
+void Flower::display()
+{
+    cout << "Name: " << name << endl;
+    cout << "Petals: " << petals << endl;
+    cout << "Price: $" << price << endl;
+}
+
+class Bouquet
+{
+private:
+    Flower *flowers; // Pointer to an array of Flower objects
+    int numFlowers;  // Number of flowers in the bouquet
+
+public:
+    Bouquet(Flower *f, int num); // Constructor that takes an array of Flower objects and the number of flowers in the bouquet
+    void displayBouquet();
+};
+
+Bouquet::Bouquet(Flower *f, int num) // Constructor that takes an array of Flower objects and the number of flowers in the bouquet
+{
+    flowers = f;
+    numFlowers = num; // Store the number of flowers in the bouquet
+}
+
+void Bouquet::displayBouquet()
+{
+    for (int i = 0; i < numFlowers; i++) // Use the stored number of flowers to iterate through the array
+    {
+        cout << "Flower " << i + 1 << ":" << endl;
+        flowers[i].display();
+    }
+}
+
+int main()
+{
+    Flower flower1("Rose", 10, 2.5);
+    Flower flower2("Tulip", 8, 1.8);
+    Flower flower3("Daisy", 12, 1.2);
+    Flower *flowers = new Flower[3]{flower1, flower2, flower3}; // Create an array of Flower objects
+    Bouquet bouquet(flowers, 3);                                // Create a Bouquet object with the array of Flower objects and the number of flowers
+    bouquet.displayBouquet();                                   // Display the bouquet information
+    delete[] flowers;                                           // Free the dynamically allocated memory for the array of Flower objects
+    return 0;
+}
